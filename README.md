@@ -22,12 +22,26 @@
 
 ## What it is
 
-Squad Up gives youth soccer coaches and administrators a single platform to run their entire season:
-schedule fixtures, plan lineups on a drag-and-drop tactical board, track live match events (goals,
-substitutions, cards), submit post-match reports, and surface player development insights over time.
+Squad Up is a management platform for youth soccer development departments — built around a problem
+that most sports tech tools don't solve well: **how do you turn subjective coaching observations into
+meaningful, long-term insight?**
 
-Built as a solo project to demonstrate full-stack engineering from data modeling through deployment,
-using a **spec-driven AI-augmented workflow** throughout.
+Every match assessment, player rating, and coach note entered into the system is inherently
+subjective — one coach's read of a player's tactical performance on a given day. On its own, a
+single rating means little. But when those observations are recorded consistently, game after game
+and season after season, a pattern emerges. Over time, the accumulated data allows clubs to move
+from gut feeling to an evidence-based picture of how individual players are actually developing.
+
+This is especially relevant in **youth development and younger age groups**, where professional
+analytics infrastructure (GPS tracking, video analysis, performance science teams) is rarely
+available. Squad Up fills that gap with a structured, low-friction tool that coaches can realistically
+use on the sideline and in the locker room — capturing the kind of qualitative data that would
+otherwise live only in a coach's memory or a spreadsheet.
+
+The result is a platform where the value compounds over time: the longer it's used, the richer
+the development picture becomes for every player in the organization.
+
+Built end-to-end as a solo project, using a **spec-driven AI-augmented development workflow** throughout.
 
 ---
 
@@ -80,38 +94,6 @@ using a **spec-driven AI-augmented workflow** throughout.
 | **Scout Reports** | Attach scouting notes and timeline events to player profiles |
 | **User Management + Auth** | JWT-based authentication, 4-role RBAC (Admin / Department Manager / Division Manager / Coach), team-scoped data filtering per role |
 | **Settings / Org Config** | Organization-level feature flags (e.g. difficulty assessment, shot tracking) that control which features are visible per club |
-
----
-
-## System architecture
-
-```mermaid
-flowchart LR
-  subgraph frontend [React 18 Frontend]
-    FSD["11 feature modules\n(Feature-Sliced Design)"]
-    Shared["shared/ — UI, hooks, API client"]
-  end
-
-  subgraph backend [Node.js + Express Backend]
-    Routes["Routes (thin)"]
-    Controllers["Controllers (HTTP)"]
-    Services["Services (business logic)"]
-    Models[("MongoDB — 18 collections")]
-  end
-
-  subgraph async [Background Processing]
-    Jobs[("jobs collection")]
-    Worker["worker.js\n(polls every 5s)"]
-  end
-
-  FSD --> Routes
-  Routes -->|"JWT + role check"| Controllers
-  Controllers --> Services
-  Services --> Models
-  Services -->|"enqueue recalc jobs"| Jobs
-  Jobs -.-> Worker
-  Worker --> Services
-```
 
 ---
 
