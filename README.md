@@ -83,17 +83,34 @@ Built end-to-end as a solo project, using a **spec-driven AI-augmented developme
 
 | Feature | What it does |
 |---------|-------------|
-| **Game Scheduling** | Create and manage fixtures — set opponent, date, location, match type (league / cup / friendly), and difficulty assessment |
-| **Game Execution** | Full live-match cockpit — drag-and-drop tactical board for lineup planning, minute-by-minute recording of goals, substitutions, and cards, real-time player stats |
-| **Post-Match Reporting** | Per-player ratings across 4 pillars (physical, technical, tactical, mental), coach notes, team summary, and detailed stats (fouls, shooting, passing, duels) — all autosaved as draft during the match |
-| **Player Management** | Player profiles, development timeline, season-aggregated stats, game-by-game rating history |
-| **Player Analytics** | Goal partnerships, minutes distribution, discipline tracking, form trends, season insights — recalculated asynchronously after every finalized game |
-| **Training Management** | Plan and track training sessions with drill assignments, session notes, and attendance |
-| **Drill System** | A reusable drill library coaches can tag, categorize, and attach to training sessions |
-| **Team Management** | Manage team rosters, tactical boards, and season metadata |
-| **Scout Reports** | Attach scouting notes and timeline events to player profiles |
-| **User Management + Auth** | JWT-based authentication, 4-role RBAC (Admin / Department Manager / Division Manager / Coach), team-scoped data filtering per role |
-| **Settings / Org Config** | Organization-level feature flags (e.g. difficulty assessment, shot tracking) that control which features are visible per club |
+| **Game Scheduling** | Create and manage fixtures with opponent, date, location, match type (league / cup / friendly), and a pre-game difficulty assessment (opponent strength, match importance, external conditions) |
+| **Game Execution** | The core live-match cockpit — drag-and-drop tactical board for lineup planning across three formations, minute-by-minute recording of goals (with scorer, assister, and goal type), substitutions (with reason), and disciplinary cards with automatic progression rules |
+| **Post-Match Reporting** | After the final whistle, coaches rate every player across four development pillars — physical, technical, tactical, and mental — add personal notes, record a team summary, and optionally fill in detailed per-player stats (fouls, shots, passes, duels). Everything autosaves as a draft during the match so nothing is lost |
+| **Player Management** | Full player profiles with a development timeline showing game-by-game rating history, season-aggregated stats, minutes played, goals, assists, and disciplinary record |
+| **Player Analytics** | Automatically derived season insights: goal partnerships, minutes distribution, form trends across last N games, and consistency scores — recalculated in the background every time a game is finalized |
+| **Training Management** | Plan training sessions, assign drills from the library, add session notes and objectives, and track attendance over time |
+| **Drill System** | A reusable drill library that coaches can build up over time — tag drills by category, duration, and focus area, then attach them directly to training session plans |
+| **Team Management** | Manage team rosters, season metadata, and a tactical board for visualizing formations outside of match context |
+| **Scout Reports** | Attach free-form scouting observations and timeline events to any player profile — useful for tracking players being considered for promotion or transfer |
+| **User Management + Auth** | JWT authentication with four access levels: Admin (full system), Department Manager (all teams), Division Manager (assigned teams), and Coach (own team only). All data queries are role-scoped on the backend |
+| **Settings / Org Config** | Per-organization feature flags that allow each club to enable or disable specific features (e.g. pre-game difficulty assessment, shot tracking, detailed disciplinary stats) |
+
+---
+
+## What's coming in v2
+
+The next major version will introduce an **AI assistant layer** embedded directly in the product.
+
+Because Squad Up already holds a rich history of structured data — match reports, per-player ratings, coach notes, training records, and season stats — the platform is well-positioned to go beyond displaying data and start interpreting it.
+
+The planned AI assistant will be able to:
+
+- **Summarize a player's season** in natural language — pulling together rating trends, standout games, areas of improvement, and disciplinary history into a concise development report that a coach or parent can read in 30 seconds
+- **Summarize a match** — combining the coach's post-game notes, final score, key events (goals, red cards, tactical changes), and player ratings into a structured post-match brief
+- **Surface patterns a coach might miss** — for example, flagging that a player's tactical ratings consistently drop in the second half, or that a player performs significantly better in cup games than league games
+- **Draft end-of-season player evaluations** — generating a first-draft performance summary per player based on the full season's recorded data, ready for the coach to review and personalize
+
+This builds directly on the core value of the platform: the longer an organization uses Squad Up, the more raw material the AI has to work with — and the more meaningful and accurate its summaries become.
 
 ---
 
