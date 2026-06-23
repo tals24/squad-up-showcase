@@ -65,20 +65,52 @@ using a **spec-driven AI-augmented workflow** throughout.
 
 ---
 
+## Features
+
+| Feature | What it does |
+|---------|-------------|
+| **Game Scheduling** | Create and manage fixtures — set opponent, date, location, match type (league / cup / friendly), and difficulty assessment |
+| **Game Execution** | Full live-match cockpit — drag-and-drop tactical board for lineup planning, minute-by-minute recording of goals, substitutions, and cards, real-time player stats |
+| **Post-Match Reporting** | Per-player ratings across 4 pillars (physical, technical, tactical, mental), coach notes, team summary, and detailed stats (fouls, shooting, passing, duels) — all autosaved as draft during the match |
+| **Player Management** | Player profiles, development timeline, season-aggregated stats, game-by-game rating history |
+| **Player Analytics** | Goal partnerships, minutes distribution, discipline tracking, form trends, season insights — recalculated asynchronously after every finalized game |
+| **Training Management** | Plan and track training sessions with drill assignments, session notes, and attendance |
+| **Drill System** | A reusable drill library coaches can tag, categorize, and attach to training sessions |
+| **Team Management** | Manage team rosters, tactical boards, and season metadata |
+| **Scout Reports** | Attach scouting notes and timeline events to player profiles |
+| **User Management + Auth** | JWT-based authentication, 4-role RBAC (Admin / Department Manager / Division Manager / Coach), team-scoped data filtering per role |
+| **Settings / Org Config** | Organization-level feature flags (e.g. difficulty assessment, shot tracking) that control which features are visible per club |
+
+---
+
 ## System architecture
 
 ```mermaid
 flowchart LR
-  Client --> Routes["routes/games/*"]
-  Routes -->|"JWT + role check"| Auth["middleware/jwtAuth"]
-  Auth --> Controllers["controllers/games/*"]
-  Controllers --> Services["services/games/*"]
-  Services --> Models[("MongoDB collections")]
-  Services --> Utils["domain utilities"]
-  Services -->|"enqueue"| Jobs["services/jobs/*"]
-  Jobs --> JobsCol[("jobs collection")]
-  JobsCol -.poll every 5s.-> Worker["worker.js"]
-  Worker --> PlayerInsights["playerSeasonInsightService"]
+  subgraph frontend [React 18 Frontend]
+    FSD["11 feature modules\n(Feature-Sliced Design)"]
+    Shared["shared/ — UI, hooks, API client"]
+  end
+
+  subgraph backend [Node.js + Express Backend]
+    Routes["Routes (thin)"]
+    Controllers["Controllers (HTTP)"]
+    Services["Services (business logic)"]
+    Models[("MongoDB — 18 collections")]
+  end
+
+  subgraph async [Background Processing]
+    Jobs[("jobs collection")]
+    Worker["worker.js\n(polls every 5s)"]
+  end
+
+  FSD --> Routes
+  Routes -->|"JWT + role check"| Controllers
+  Controllers --> Services
+  Services --> Models
+  Services -->|"enqueue recalc jobs"| Jobs
+  Jobs -.-> Worker
+  Worker --> Services
 ```
 
 ---
